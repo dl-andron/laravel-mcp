@@ -32,6 +32,7 @@
         "symfony/process": "^6.4|^7.4.5|^8.0.5"
     },
     "require-dev": {
+        "guzzlehttp/guzzle": "^7.8",
         "laravel/pint": "^1.20",
         "orchestra/testbench": "^8.38|^9.15|^10.8|^11.0",
         "pestphp/pest": "^2.36|^3.8.5|^4.3.2",
@@ -78,12 +79,14 @@
             "pint",
             "rector"
         ],
+        "downgrade": "rector process --config=rector-downgrade.php",
         "test:lint": [
             "pint --test",
             "rector --dry-run"
         ],
         "test:unit": "pest --ci --coverage --min=92.5",
         "test:types": "phpstan --no-progress",
+        "test:types:laravel10": "@php vendor/bin/phpstan --no-progress --configuration=phpstan-laravel10.neon",
         "test:conformance": "bash tests/Conformance/run.sh all",
         "test:conformance:server": "bash tests/Conformance/run.sh server",
         "test:conformance:client": "bash tests/Conformance/run.sh client",
@@ -91,6 +94,11 @@
             "@test:lint",
             "@test:unit",
             "@test:types"
+        ],
+        "test:php81": [
+            "@php vendor/bin/rector --dry-run --no-progress-bar",
+            "@php vendor/bin/pest --ci",
+            "@test:types:laravel10"
         ]
     },
     "config": {

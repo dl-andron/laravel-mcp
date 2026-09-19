@@ -1,0 +1,22 @@
+# Профиль статического анализа для PHP 8.1 / Laravel 10.
+#
+# Код пакета на Laravel 10 не меняется, но PHPStan выдаёт 19 замечаний,
+# которых нет на Laravel 11+: там хелперы response(), view() и url() имеют
+# conditional return types, а в Laravel 10 — union (ResponseFactory|Response,
+# Factory|View, UrlGenerator|string), поэтому вызовы ->json(), ->render(),
+# ->current() выглядят как обращение к несуществующему методу.
+#
+# Все они зафиксированы в phpstan-laravel10-baseline.neon — это снимок
+# расхождения с типами самого фреймворка, а не список подавленных багов.
+# Любое НОВОЕ замечание по-прежнему валит анализ.
+#
+# Запуск: composer test:types:laravel10
+
+includes:
+    - phpstan.neon.dist
+    - phpstan-laravel10-baseline.neon
+
+parameters:
+    # На Laravel 11+ часть записей baseline не совпадёт — это ожидаемо и не
+    # должно превращаться в ошибку, конфиг рассчитан на Laravel 10.
+    reportUnmatchedIgnoredErrors: false

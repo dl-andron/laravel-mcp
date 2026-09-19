@@ -1,0 +1,73 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\View\\Factory\|Illuminate\\Contracts\\View\\View\:\:render\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Response.php
+
+		-
+			message: '#^Cannot call method current\(\) on Illuminate\\Contracts\\Routing\\UrlGenerator\|string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Server/AppResource.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Routing\\ResponseFactory\|Illuminate\\Http\\Response\:\:json\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: src/Server/Http/Controllers/OAuthRegisterController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Routing\\ResponseFactory\|Illuminate\\Http\\Response\:\:json\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Server/Middleware/ValidateMcpHeaders.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Routing\\ResponseFactory\|Illuminate\\Http\\Response\:\:header\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Server/Registrar.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Routing\\ResponseFactory\|Illuminate\\Http\\Response\:\:json\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: src/Server/Registrar.php
+
+		-
+			message: '#^Method Laravel\\Mcp\\Server\\Registrar\:\:authorizationServerMetadata\(\) should return array\<string, array\<int, string\>\|string\> but returns array\<string, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Server/Registrar.php
+
+		-
+			message: '#^Method Laravel\\Mcp\\Server\\Registrar\:\:protectedResourceMetadata\(\) should return array\<string, array\<int, string\>\|string\> but returns array\<string, Illuminate\\Contracts\\Routing\\UrlGenerator\|list\<mixed\>\|string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Server/Registrar.php
+
+		-
+			message: '#^Parameter \#1 \$iterator of function iterator_to_array expects Traversable, iterable\<int, Laravel\\Mcp\\Transport\\JsonRpcResponse\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Server/Testing/TestResponse.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Routing\\ResponseFactory\|Illuminate\\Http\\Response\:\:stream\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Server/Transport/HttpTransport.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Laravel\\Mcp\\Support\\MirroredParameter\>\:\:duplicates\(\) expects \(callable\(Laravel\\Mcp\\Support\\MirroredParameter\)\: bool\)\|string\|null, Closure\(Laravel\\Mcp\\Support\\MirroredParameter\)\: lowercase\-string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Support/MirroredParameters.php
+
+		-
+			message: '#^Argument of an invalid type list\<string\>\|false supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/Support/UriTemplate.php

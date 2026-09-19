@@ -1,0 +1,61 @@
+# Профиль форка: PHP 8.1 + Laravel 10.
+# Отдельный workflow, а не строки в tests.yml, чтобы ребейз на апстрим
+# не конфликтовал. Pint в профиль не входит: последняя версия pint,
+# работающая на PHP 8.1 (1.20), форматирует иначе, чем актуальная 1.32,
+# которой проверяется стиль в coding-standards.yml.
+
+name: tests (php 8.1)
+
+on:
+  push:
+    branches:
+      - '*-php81'
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-22.04, windows-latest ]
+        php: [ 8.1 ]
+        laravel: [ 10 ]
+
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.os }}
+
+    steps:
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo_sqlite, sqlite3
+          ini-values: error_reporting=E_ALL
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer update --prefer-dist --no-interaction --no-progress --with="illuminate/contracts:^${{ matrix.laravel }}"
+
+      - name: Execute tests
+        run: composer test:php81
