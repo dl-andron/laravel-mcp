@@ -18,14 +18,18 @@ class Client extends Model
 
     protected $table = 'oauth_clients';
 
-    protected function casts(): array
-    {
-        return [
-            'grant_types' => 'array',
-            'redirect_uris' => 'array',
-            'scopes' => 'array',
-        ];
-    }
+    /**
+     * Свойство, а не метод casts(): метод появился только в Laravel 11,
+     * в Laravel 10 он игнорируется и массивы уезжают в БД как "Array".
+     * Свойство работает во всех поддерживаемых версиях.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'grant_types' => 'array',
+        'redirect_uris' => 'array',
+        'scopes' => 'array',
+    ];
 
     public function getConnectionName(): ?string
     {

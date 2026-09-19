@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Application;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\ResponseFactory;
@@ -123,7 +124,10 @@ it('serializes the structured content before asserting with a closure', function
             ->where('amount', 10)
             ->etc()
     );
-});
+})->skip(
+    fn (): bool => version_compare(Application::VERSION, '11.0.0', '<'),
+    'AssertableJson::where() разворачивает BackedEnum только начиная с Laravel 11; на Laravel 10 сравнивать нужно с ->value.'
+);
 
 it('serializes the structured content before asserting with an array', function (): void {
     $response = BookingServer::tool(GetBookingWithSerializableValuesTool::class);

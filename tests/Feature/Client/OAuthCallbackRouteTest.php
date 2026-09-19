@@ -109,14 +109,14 @@ it('supports controller array syntax for the handler', function (): void {
 });
 
 it('applies the web middleware group by default to both routes', function (): void {
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null);
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null);
 
     expect(Route::getRoutes()->getByName('mcp.oauth.github.connect')->gatherMiddleware())->toContain('web')
         ->and(Route::getRoutes()->getByName('mcp.oauth.github.callback')->gatherMiddleware())->toContain('web');
 });
 
 it('keeps the client id metadata document publicly fetchable', function (): void {
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null, middleware: ['web', 'auth']);
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null, middleware: ['web', 'auth']);
 
     expect(Route::getRoutes()->getByName('mcp.oauth.github.client-metadata')->gatherMiddleware())
         ->not->toContain('web')
@@ -128,7 +128,7 @@ it('keeps the client id metadata document publicly fetchable', function (): void
 });
 
 it('allows the middleware to be overridden on both routes', function (): void {
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null, middleware: ['web', 'auth']);
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null, middleware: ['web', 'auth']);
 
     expect(Route::getRoutes()->getByName('mcp.oauth.github.connect')->gatherMiddleware())->toContain('web')->toContain('auth')
         ->and(Route::getRoutes()->getByName('mcp.oauth.github.callback')->gatherMiddleware())->toContain('web')->toContain('auth');
@@ -191,7 +191,7 @@ it('forwards challenge metadata and scope from the connect route into discovery'
         redirectUri: 'https://app.test/callback',
     ));
 
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null);
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null);
 
     $this->withSession([])
         ->get('/mcp/github/connect?resource_metadata=https://mcp.test/.well-known/custom-resource&scope=files:read')
@@ -204,7 +204,7 @@ it('forwards challenge metadata and scope from the connect route into discovery'
 it('serves a client id metadata document matching its own url', function (): void {
     registerGithubClient();
 
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null);
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null);
 
     $document = $this->get('/mcp/oauth/github/client-metadata.json')
         ->assertOk()
@@ -224,7 +224,7 @@ it('defaults the client id metadata url to the published route', function (): vo
 
     Mcp::registerClient('github', fn (): WebClient => Client::web('https://mcp.test/mcp')->withOAuth());
 
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null);
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null);
 
     Http::fake([
         'https://mcp.test/.well-known/oauth-protected-resource/mcp' => Http::response([
@@ -248,7 +248,7 @@ it('defaults the client id metadata url to the published route', function (): vo
 it('declares a custom redirect uri alongside the published callback route', function (): void {
     config()->set('app.url', 'https://app.example.com');
 
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null, clientMetadata: [
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null, clientMetadata: [
         'redirect_uris' => ['https://app.example.com/callback'],
     ]);
 
@@ -262,7 +262,7 @@ it('builds the client id metadata document from the configured application url',
     config()->set('app.url', 'https://app.example.com/');
     config()->set('app.name', 'Acme');
 
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null);
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null);
 
     $document = $this->get('http://spoofed.example.net/mcp/oauth/github/client-metadata.json')->json();
 
@@ -275,7 +275,7 @@ it('builds the client id metadata document from the configured application url',
 it('allows the published client metadata to be customised without weakening it', function (): void {
     config()->set('app.url', 'https://app.example.com');
 
-    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token): null => null, clientMetadata: [
+    Mcp::oAuthRoutesFor('github', fn (string $provider, TokenSet $token) => null, clientMetadata: [
         'client_name' => 'Acme Dashboard',
         'logo_uri' => 'https://app.example.com/logo.png',
         'client_id' => 'https://evil.example.net/impostor.json',

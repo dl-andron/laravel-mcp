@@ -413,8 +413,8 @@ it('describes the redirect error when an earlier rule also fails', function (): 
 it('renders client metadata on the authorize view', function (array $metadataColumns, array $attributes, array $expected, array $missing): void {
     $this->withoutVite();
     prepareOauthRegistration(metadataColumns: $metadataColumns);
-    Route::post('oauth/authorize', fn (): null => null)->name('passport.authorizations.approve');
-    Route::delete('oauth/authorize', fn (): null => null)->name('passport.authorizations.deny');
+    Route::post('oauth/authorize', fn () => null)->name('passport.authorizations.approve');
+    Route::delete('oauth/authorize', fn () => null)->name('passport.authorizations.deny');
     Model::preventAccessingMissingAttributes();
 
     $client = Passport::client()->forceFill(['id' => 'client-id', 'name' => 'Example', 'grant_types' => [], 'redirect_uris' => [], ...$attributes]);
