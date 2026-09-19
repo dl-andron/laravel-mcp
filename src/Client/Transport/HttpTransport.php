@@ -66,6 +66,18 @@ class HttpTransport implements Transport, UsesProtocol
     }
 
     /**
+     * Таймаут в виде, который принимает PendingRequest::timeout().
+     *
+     * В Laravel 10 сигнатура — timeout(int $seconds), дробные значения
+     * появились только в 11.x, поэтому дробь округляется вверх (0 секунд
+     * в Guzzle означает "без таймаута", а не мгновенный обрыв).
+     */
+    protected function requestTimeout(): int
+    {
+        return (int) ceil($this->timeoutSeconds);
+    }
+
+    /**
      * @param  string|Closure(): string  $token
      */
     public function withToken(#[SensitiveParameter] string|Closure $token): void
@@ -110,7 +122,7 @@ class HttpTransport implements Transport, UsesProtocol
         try {
             $response = Http::withHeaders($this->headers($headers))
                 ->withBody($message, 'application/json')
-                ->timeout($this->timeoutSeconds)
+                ->timeout($this->requestTimeout())
                 ->withOptions(['stream' => true])
                 ->post($this->url);
         } catch (ConnectionException $connectionException) {
@@ -342,7 +354,7 @@ class HttpTransport implements Transport, UsesProtocol
 
         try {
             Http::withHeaders($this->headers())
-                ->timeout($this->timeoutSeconds)
+                ->timeout($this->requestTimeout())
                 ->delete($this->url);
         } catch (Throwable) {
             //

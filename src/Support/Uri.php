@@ -28,7 +28,9 @@ class Uri implements Stringable
     }
 
     /**
-     * @return array<string, mixed>
+     * parse_str() отдаёт числовые ключи как int, поэтому ключ — int|string.
+     *
+     * @return array<int|string, mixed>
      */
     public function query(): array
     {
