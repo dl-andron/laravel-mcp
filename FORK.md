@@ -15,7 +15,7 @@ v0.5.4 (04.02.2026) и поднял нижнюю границу до Laravel 11,
 
 | Файл | Изменение |
 |---|---|
-| `composer.json` | `php: ^8.1`; в `illuminate/*` добавлен `^10.50`; в `symfony/process` добавлен `^6.4`; в `require-dev` добавлены `orchestra/testbench ^8.38`, `pestphp/pest ^2.36`, `guzzlehttp/guzzle ^7.8`; имя пакета `tdkomplekt/laravel-mcp` |
+| `composer.json` | `php: ^8.1`; в `illuminate/*` добавлен `^10.50`; в `symfony/process` добавлен `^6.4`; в `require-dev` добавлены `orchestra/testbench ^8.38`, `pestphp/pest ^2.36`, `guzzlehttp/guzzle ^7.8`; имя пакета `tdkomplekt/laravel-mcp`; `config.audit.ignore` на одну advisory (см. «Известные ограничения», п. 4) |
 | `src/Support/Uri.php` | **новый файл** — замена `Illuminate\Support\Uri` (есть только с Laravel 11.35) |
 | `src/Client/OAuth/OAuthClient.php` | импорт `Illuminate\Support\Uri` → `Laravel\Mcp\Support\Uri` (одна строка) |
 | `src/Client/Transport/HttpTransport.php` | таймаут через `requestTimeout(): int` — в Laravel 10 `PendingRequest::timeout()` принимает только `int` |
@@ -23,6 +23,7 @@ v0.5.4 (04.02.2026) и поднял нижнюю границу до Laravel 11,
 | `rector-downgrade.php` | **новый файл** — автоматический даунгрейд синтаксиса 8.2+ при ребейзе |
 | `phpstan-laravel10.neon` + `phpstan-laravel10-baseline.neon` | **новые файлы** — профиль статического анализа под Laravel 10 |
 | `.github/workflows/tests-php81.yml` | **новый файл** — CI-джоба PHP 8.1 / Laravel 10 |
+| `.github/workflows/coding-standards.yml` | триггер `on: [push]` → только ветки: на пуш тега workflow падал, потому что не может закоммитить правки стиля в тег |
 | `tests/Fixtures/PassportClient.php` | `casts()` → свойство `$casts` (метод появился в Laravel 11) |
 | `tests/Feature/Client/OAuthCallbackRouteTest.php`, `tests/Unit/Server/RegistrarTest.php` | убран standalone-тип `null` в `fn (): null` (синтаксис PHP 8.2) |
 | `tests/Feature/Testing/Tools/AssertStructuredContentTest.php` | один тест пропускается на Laravel < 11 (см. «Известные ограничения») |
@@ -111,7 +112,24 @@ composer test:php81
    несуществующего метода. Зафиксированы в `phpstan-laravel10-baseline.neon`;
    любое новое замечание по-прежнему валит анализ.
 
-4. **OAuth-поддержка пакета не работает с произвольными scope'ами** — это не
+4. **PHPUnit на профиле 8.1 зафиксирован на 10.5.36 с известной advisory.**
+   Pest 2.36.0 — последний Pest, работающий на PHP 8.1 — объявляет
+   `conflict: phpunit >10.5.36`, то есть допускает ровно одну версию PHPUnit.
+   А Composer 2.10+ по умолчанию **исключает из резолвинга версии с известными
+   уязвимостями**, и advisory `PKSA-z3gr-8qht-p93v` («Unsafe Deserialization in
+   PHPT Code Coverage Handling») покрывает `phpunit >=10.0.0,<10.5.62`. В итоге
+   на свежем Composer профиль 8.1 не собирался вообще.
+
+   Решение — точечный `config.audit.ignore` на эту одну advisory в `composer.json`
+   (не общий `--no-blocking`, остальные блокировки работают). Это осознанный
+   компромисс: PHPUnit — dev-зависимость, в прод не уезжает, уязвимость касается
+   обработки PHPT-покрытия. Запись нужно убрать, как только выйдет Pest под
+   PHP 8.1, допускающий `phpunit >=10.5.62`.
+
+   Локальный Composer 2.7.x эту блокировку не делает и собирает профиль без
+   записи — расхождение с CI проявляется только на Composer ≥ 2.9.
+
+5. **OAuth-поддержка пакета не работает с произвольными scope'ами** — это не
    ограничение форка, а осознанное решение апстрима: `Mcp::oauthRoutes()`
    объявляет и использует единственный scope `mcp:use`, OAuth служит только
    прослойкой к authenticatable-модели. Приложению со своей scope-моделью

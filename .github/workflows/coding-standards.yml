@@ -1,6 +1,11 @@
 name: fix code styling
 
-on: [push]
+# Фильтр по веткам — правка форка: с `on: [push]` workflow запускается и на
+# пуш тегов, а закоммитить исправления стиля в тег он не может и падает.
+on:
+  push:
+    branches:
+      - '**'
 
 permissions:
   contents: write

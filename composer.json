@@ -105,6 +105,11 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true
+        },
+        "audit": {
+            "ignore": {
+                "PKSA-z3gr-8qht-p93v": "Pest 2.36.0 -- the last Pest that runs on PHP 8.1 -- conflicts with phpunit >10.5.36, so 10.5.36 is the only resolvable version, and Composer 2.10+ blocks it because this advisory covers phpunit <10.5.62. Dev-only dependency, never shipped; the advisory is about PHPT code coverage handling. Drop this entry as soon as a Pest release for PHP 8.1 allows phpunit >=10.5.62."
+            }
         }
     },
     "minimum-stability": "dev",
