@@ -1,15 +1,15 @@
 {
-    "name": "tdkomplekt/laravel-mcp",
+    "name": "dl-andron/laravel-mcp",
     "description": "Fork of laravel/mcp with PHP 8.1 and Laravel 10 support.",
     "keywords": [
         "mcp",
         "laravel"
     ],
-    "homepage": "https://github.com/TD-Komplekt/laravel-mcp",
+    "homepage": "https://github.com/dl-andron/laravel-mcp",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/TD-Komplekt/laravel-mcp/issues",
-        "source": "https://github.com/TD-Komplekt/laravel-mcp"
+        "issues": "https://github.com/dl-andron/laravel-mcp/issues",
+        "source": "https://github.com/dl-andron/laravel-mcp"
     },
     "authors": [
         {

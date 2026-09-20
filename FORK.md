@@ -5,7 +5,7 @@
 v0.5.4 (04.02.2026) и поднял нижнюю границу до Laravel 11, поэтому 1.0 на таком
 стеке не ставится.
 
-Пакет называется `tdkomplekt/laravel-mcp`, namespace остался `Laravel\Mcp\` —
+Пакет называется `dl-andron/laravel-mcp`, namespace остался `Laravel\Mcp\` —
 **документация апстрима применима дословно**: <https://laravel.com/docs/mcp>.
 
 Ветка форка: `1.0.x-php81` (отведена от тега `v1.0.0`).
@@ -15,7 +15,7 @@ v0.5.4 (04.02.2026) и поднял нижнюю границу до Laravel 11,
 
 | Файл | Изменение |
 |---|---|
-| `composer.json` | `php: ^8.1`; в `illuminate/*` добавлен `^10.50`; в `symfony/process` добавлен `^6.4`; в `require-dev` добавлены `orchestra/testbench ^8.38`, `pestphp/pest ^2.36`, `guzzlehttp/guzzle ^7.8`; имя пакета `tdkomplekt/laravel-mcp`; `config.audit.ignore` на одну advisory (см. «Известные ограничения», п. 4) |
+| `composer.json` | `php: ^8.1`; в `illuminate/*` добавлен `^10.50`; в `symfony/process` добавлен `^6.4`; в `require-dev` добавлены `orchestra/testbench ^8.38`, `pestphp/pest ^2.36`, `guzzlehttp/guzzle ^7.8`; имя пакета `dl-andron/laravel-mcp`; `config.audit.ignore` на одну advisory (см. «Известные ограничения», п. 4) |
 | `src/Support/Uri.php` | **новый файл** — замена `Illuminate\Support\Uri` (есть только с Laravel 11.35) |
 | `src/Client/OAuth/OAuthClient.php` | импорт `Illuminate\Support\Uri` → `Laravel\Mcp\Support\Uri` (одна строка) |
 | `src/Client/Transport/HttpTransport.php` | таймаут через `requestTimeout(): int` — в Laravel 10 `PendingRequest::timeout()` принимает только `int` |
@@ -39,21 +39,28 @@ Laravel 10 был ровно один — `Illuminate\Support\Uri`.
 ```json
 {
     "repositories": [
-        { "type": "vcs", "url": "https://github.com/TD-Komplekt/laravel-mcp.git" }
+        { "type": "vcs", "url": "https://github.com/dl-andron/laravel-mcp.git" }
     ],
     "require": {
-        "tdkomplekt/laravel-mcp": "1.0.0.1"
+        "dl-andron/laravel-mcp": "1.0.0.2"
     }
 }
 ```
 
 Версия пинуется точно.
 
+**Дефолтная ветка репозитория — `1.0.x-php81`, и это обязательное условие.**
+Имя пакета Composer берёт из `composer.json` дефолтной ветки: пока ею была `main`
+с апстримным содержимым, весь репозиторий индексировался как `laravel/mcp`, а
+`dl-andron/laravel-mcp` не находился вообще. Апстримные теги при этом молча
+пропускаются — в их `composer.json` другое имя (предупреждения печатаются только
+в verbose-режиме).
+
 **Схема тегов.** Теги апстрима (`v1.0.0`, `v1.0.1`, …) в репозитории сохраняются —
 они нужны для ребейза и указывают на апстримные коммиты **без бэкпорта**.
 Релизы форка всегда четырёхзначные: `vX.Y.Z.N`, где `X.Y.Z` — релиз апстрима, на
-который отребейзен форк, а `N` — ревизия форка, начиная с 1. Первый релиз —
-**`v1.0.0.1`** (апстримный 1.0.0 + бэкпорт). Требовать в проекте нужно именно
+который отребейзен форк, а `N` — ревизия форка, начиная с 1. Текущий релиз —
+**`v1.0.0.2`** (апстримный 1.0.0 + бэкпорт). Требовать в проекте нужно именно
 четырёхзначную версию: `1.0.0` отдаст апстримный код без правок.
 
 ## Проверка на целевом стеке
