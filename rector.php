@@ -27,6 +27,6 @@ return RectorConfig::configure()
         codingStyle: true,
         typeDeclarations: true,
         earlyReturn: true,
-    // Форк собирается под PHP 8.1, поэтому набор правил — php81, а не php82:
-    // иначе Rector предлагал бы синтаксис, который не парсится на 8.1.
+        // Форк собирается под PHP 8.1, поэтому набор правил — php81, а не php82:
+        // иначе Rector предлагал бы синтаксис, который не парсится на 8.1.
     )->withPhpSets(php81: true);
